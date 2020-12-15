@@ -1,27 +1,7 @@
-# 2. Написать два алгоритма нахождения i-го по счёту простого числа. Функция нахождения простого числа должна принимать на вход натуральное и возвращать соответствующее простое число. Проанализировать скорость и сложность алгоритмов.
-#
-# Первый — с помощью алгоритма «Решето Эратосфена».
-#
-# Примечание. Алгоритм «Решето Эратосфена» разбирался на одном из прошлых уроков. Используйте этот код и попробуйте его улучшить/оптимизировать под задачу.
-#
-# Второй — без использования «Решета Эратосфена».
-#
-# Примечание. Вспомните классический способ проверки числа на простоту.
-#
-# Пример работы программ:
-#
-# >>> sieve(2)
-# 3
-# >>> prime(4)
-# 7
-# >>> sieve(5)
-# 11
-# >>> prime(1)
-# 2
+import cProfile
 
 def sieve(n):
-    """Решето Эратосфена"""
-    myrange = 3 if n < 2 else n**2
+    myrange = 4 if n < 2 else n**2+1
 
     s = [i for i in range(myrange)]
     s[1] = 0
@@ -29,7 +9,6 @@ def sieve(n):
     for i in range(2, myrange):
         if s[i] != 0:
             j = i*2
-
             while j < myrange:
                 s[j] = 0
                 j += i
@@ -39,29 +18,119 @@ def sieve(n):
 
 
 def prime(n):
-    """Алгоритм остановится на числе, которое будет делителем числа n"""
-    d = 2
-    while n % d != 0:
-        d += 1
-    return d == n
+    myrange = 4 if n < 2 else n ** 2 + 1
+    s = [i for i in range(2,myrange)]
 
-def prime2(n):
-    """Чиcло n является простым, если алгоритм закончился по причине того, что проверяемый делитель стал больше, чем корень из n."""
-    d = 2
-    while d * d <= n and n % d != 0:
-        d += 1
-    return d * d > n
+    for a in s:
+        k = 0
+        for i in range(2, a // 2 + 1):
+            if (a % i == 0):
+                k = k + 1
+        if (k <= 0):
+            n -= 1
+        if n <= 0:
+            return a
 
-def prime3(n):
-    """Перебор нечетных делителей"""
-    if n % 2 == 0:
-        return n == 2
-    d = 3
-    while d * d <= n and n % d != 0:
-        d += 2
-    return d * d > n
+#на первых числах быстрее prime, далее быстрее sieve
 
-print(sieve(2000))
-print(sieve(4))
-print(sieve(5))
-print(sieve(1))
+#Test
+
+# Jogger@MacBookPro Lesson4 % python -m timeit -n 1000 -s "import Task2" "Task2.sieve(1)"
+# 1000 loops, best of 3: 2.19 usec per loop
+# Jogger@MacBookPro Lesson4 % python -m timeit -n 1000 -s "import Task2" "Task2.sieve(10)"
+# 1000 loops, best of 3: 27.5 usec per loop
+# Jogger@MacBookPro Lesson4 % python -m timeit -n 1000 -s "import Task2" "Task2.sieve(50)"
+# 1000 loops, best of 3: 836 usec per loop
+# Jogger@MacBookPro Lesson4 % python -m timeit -n 1000 -s "import Task2" "Task2.sieve(100)"
+# 1000 loops, best of 3: 3.48 msec per loop
+
+# Jogger@MacBookPro Lesson4 % python -m timeit -n 1000 -s "import Task2" "Task2.prime(1)"
+# 1000 loops, best of 3: 1.27 usec per loop
+# Jogger@MacBookPro Lesson4 % python -m timeit -n 1000 -s "import Task2" "Task2.prime(10)"
+# 1000 loops, best of 3: 35.5 usec per loop
+# Jogger@MacBookPro Lesson4 % python -m timeit -n 1000 -s "import Task2" "Task2.prime(50)"
+# 1000 loops, best of 3: 1.3 msec per loop
+# Jogger@MacBookPro Lesson4 % python -m timeit -n 1000 -s "import Task2" "Task2.prime(100)"
+# 1000 loops, best of 3: 5.61 msec per loop
+
+# cProfile.run('sieve(1)')
+# cProfile.run('sieve(50)')
+# cProfile.run('sieve(100)')
+
+# 6 function calls in 0.000 seconds
+#
+#    Ordered by: standard name
+#
+#    ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+#         1    0.000    0.000    0.000    0.000 <string>:1(<module>)
+#         1    0.000    0.000    0.000    0.000 Task2.py:16(<listcomp>)
+#         1    0.000    0.000    0.000    0.000 Task2.py:3(sieve)
+#         1    0.000    0.000    0.000    0.000 Task2.py:6(<listcomp>)
+#         1    0.000    0.000    0.000    0.000 {built-in method builtins.exec}
+#         1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+#
+#
+#          6 function calls in 0.001 seconds
+#
+#    Ordered by: standard name
+#
+#    ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+#         1    0.000    0.000    0.001    0.001 <string>:1(<module>)
+#         1    0.000    0.000    0.000    0.000 Task2.py:16(<listcomp>)
+#         1    0.001    0.001    0.001    0.001 Task2.py:3(sieve)
+#         1    0.000    0.000    0.000    0.000 Task2.py:6(<listcomp>)
+#         1    0.000    0.000    0.001    0.001 {built-in method builtins.exec}
+#         1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+#
+#
+#          6 function calls in 0.004 seconds
+#
+#    Ordered by: standard name
+#
+#    ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+#         1    0.000    0.000    0.004    0.004 <string>:1(<module>)
+#         1    0.000    0.000    0.000    0.000 Task2.py:16(<listcomp>)
+#         1    0.003    0.003    0.004    0.004 Task2.py:3(sieve)
+#         1    0.001    0.001    0.001    0.001 Task2.py:6(<listcomp>)
+#         1    0.000    0.000    0.004    0.004 {built-in method builtins.exec}
+#         1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+
+# cProfile.run('prime(1)')
+# cProfile.run('prime(50)')
+# cProfile.run('prime(100)')
+
+# 5 function calls in 0.000 seconds
+#
+#    Ordered by: standard name
+#
+#    ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+#         1    0.000    0.000    0.000    0.000 <string>:1(<module>)
+#         1    0.000    0.000    0.000    0.000 Task2.py:20(prime)
+#         1    0.000    0.000    0.000    0.000 Task2.py:22(<listcomp>)
+#         1    0.000    0.000    0.000    0.000 {built-in method builtins.exec}
+#         1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+#
+#
+#          5 function calls in 0.001 seconds
+#
+#    Ordered by: standard name
+#
+#    ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+#         1    0.000    0.000    0.001    0.001 <string>:1(<module>)
+#         1    0.001    0.001    0.001    0.001 Task2.py:20(prime)
+#         1    0.000    0.000    0.000    0.000 Task2.py:22(<listcomp>)
+#         1    0.000    0.000    0.001    0.001 {built-in method builtins.exec}
+#         1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+#
+#
+#          5 function calls in 0.007 seconds
+#
+#    Ordered by: standard name
+#
+#    ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+#         1    0.000    0.000    0.006    0.006 <string>:1(<module>)
+#         1    0.006    0.006    0.006    0.006 Task2.py:20(prime)
+#         1    0.001    0.001    0.001    0.001 Task2.py:22(<listcomp>)
+#         1    0.000    0.000    0.007    0.007 {built-in method builtins.exec}
+#         1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+
