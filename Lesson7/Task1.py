@@ -24,5 +24,5 @@ def bubble_sort(mylist):
 
 a = [i for i in range(-100,100)]
 random.shuffle(a)
-print(a)
-print(f'Массив отсортирован за {bubble_sort(a)} итерации.')
+print('Unsorted list: ', a)
+print(f'The list is sorted in {bubble_sort(a)} iterations')
