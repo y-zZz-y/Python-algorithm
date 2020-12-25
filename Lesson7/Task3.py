@@ -31,8 +31,6 @@ def find_mid(alist):
     else:
         return [minlist,mid,maxlist]
 
-    # find_mid(alist, mid)
-
 m = 10
 alist = [randint(0,49) for _ in range(2*m+1)]
 print(f'In list: {alist} - {len(alist)} elements')
