@@ -32,7 +32,6 @@ def dijkstra(graph, start):
                     cost[i] = vertex + cost[start]
                     if start not in ver[i]:
                         ver[i].append(start)
-                        print(ver)
                     parent[i] = start
 
         min_cost = float('inf')
@@ -41,10 +40,9 @@ def dijkstra(graph, start):
                 min_cost = cost[i]
                 if i not in ver[i]:
                     ver[i].append(i)
-                    print(ver)
                 start = i
 
-    return cost
+    return cost, ver
 
 s = int(input('От какой вершины идти: '))
 print(dijkstra(g,s))
