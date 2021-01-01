@@ -9,6 +9,13 @@
 
 import random
 
+size = 10
+
+start = 1
+
+visited = [False] * (size + 1)
+prev = [None] * (size + 1)
+
 def graph_gen(vertex):
     vert = [i for i in range(vertex)]
     graph = [[] for _ in range(vertex)]
@@ -17,9 +24,19 @@ def graph_gen(vertex):
         vert_ch = random.choices(vert, k=random.randint(1, vertex))
         vert_ch = set(vert_ch)
         vert_ch.discard(i)
-        graph[i] = vert_ch
+        graph[i] = list(vert_ch)
 
     return graph
 
 
-print(graph_gen(8))
+def dfs(start, visited, prev, g):
+    visited[start] = True
+    for u in g[start]:
+        if not visited[u]:
+            prev[u] = start
+            dfs(u, visited, prev, g)
+
+
+g = graph_gen(size)
+dfs(start, visited, prev, g)
+
