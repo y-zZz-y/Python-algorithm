@@ -43,6 +43,9 @@ def dijkstra(graph, start):
                     ver[i].append(i)
                 start = i
 
+    for i, el in enumerate(cost):
+        if el == float('inf'):
+            ver[i] = float('inf')
     return cost, ver
 
 s = int(input('От какой вершины идти: '))
