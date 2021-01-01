@@ -21,26 +21,28 @@ def dijkstra(graph, start):
     cost[start] = 0
     min_cost = 0
 
-    ver = [[start]]*length
+    ver = [[start] for _ in range(length)]
 
     while min_cost < float('inf'):
         is_visited[start] = True
-        print(start)
 
         for i, vertex in enumerate(graph[start]):
             if vertex != 0 and not is_visited[i]:
                 if cost[i] > vertex + cost[start]:
                     cost[i] = vertex + cost[start]
-                    ver[i].append(i)
+                    if start not in ver[i]:
+                        ver[i].append(start)
+                        print(ver)
                     parent[i] = start
 
         min_cost = float('inf')
         for i in range(length):
             if min_cost > cost[i] and not is_visited[i]:
                 min_cost = cost[i]
-                print(i)
+                if i not in ver[i]:
+                    ver[i].append(i)
+                    print(ver)
                 start = i
-
 
     return cost
 
