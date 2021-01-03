@@ -22,7 +22,7 @@ def dijkstra(graph, start):
     cost[start] = 0
     min_cost = 0
 
-    ver = [[start] for _ in range(length)]
+    ver = [[] for _ in range(length)]
 
     while min_cost < float('inf'):
         is_visited[start] = True
@@ -31,21 +31,24 @@ def dijkstra(graph, start):
             if vertex != 0 and not is_visited[i]:
                 if cost[i] > vertex + cost[start]:
                     cost[i] = vertex + cost[start]
-                    if start not in ver[i]:
-                        ver[i].append(start)
                     parent[i] = start
 
         min_cost = float('inf')
         for i in range(length):
             if min_cost > cost[i] and not is_visited[i]:
                 min_cost = cost[i]
-                if i not in ver[i]:
-                    ver[i].append(i)
                 start = i
 
-    for i, el in enumerate(cost):
-        if el == float('inf'):
-            ver[i] = float('inf')
+    for i in range(length):
+        if is_visited[i]:
+            ver[i].append(i)
+            j = i
+            while parent[j] != -1:
+                ver[i].append(parent[j])
+                j = parent[j]
+
+            ver[i].reverse()
+
     return cost, ver
 
 s = int(input('От какой вершины идти: '))
