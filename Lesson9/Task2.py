@@ -79,7 +79,7 @@ my_string = input('Введите строку для кодирования: ')
 tree = get_tree(my_string)
 
 codes = get_code(tree)
-print(f'Код: {codes}')
+print(f'Таблица кодов: {codes}')
 
 coding_str = coding(my_string, codes)
 print('Закодированная строка: ', coding_str)
