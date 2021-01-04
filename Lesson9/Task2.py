@@ -74,7 +74,9 @@ def decoding(string, codes):
                 i += len(codes[code])
     return res
 
-tree = get_tree(input('Введите строку для кодирования: '))
+my_string = input('Введите строку для кодирования: ')
+
+tree = get_tree(my_string)
 
 codes = get_code(tree)
 print(f'Код: {codes}')
